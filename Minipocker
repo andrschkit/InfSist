@@ -1,0 +1,84 @@
+import itertools
+import random
+
+player_count = int(input("How many players? "))
+
+suits = ['s', 'c', 'd', 'h']
+faces = ['A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K']
+
+# Defining deck and drawing cards (5 + 2 per player):
+
+deck = set(itertools.product(faces, suits))
+drawn_cards = random.sample(deck,(5 + 2 * player_count))
+
+# Storing a list with player object instances
+
+players = []
+
+class Players:
+
+    def __init__(self, stack):
+
+        self.stack = stack
+        self.last_action = "none"  ## last action taken (check, call etc). 
+        self.street_bets = 0       ## total bets on current street
+
+    def holecards(self):
+
+## pop cards from list and pritifying their display. Cards will later be 
+## run through a function for checking value of hands:
+
+        card1 = drawn_cards.pop(len(drawn_cards)-1) 
+        card2 = drawn_cards.pop(len(drawn_cards)-1) 
+        self.card1 = (card1[0]+"["+card1[1]+"]")    
+        self.card2 = (card2[0]+"["+card2[1]+"]")     
+        self.cards = self.card1+ " - " +self.card2
+        print (self.cards)      
+
+class Table:
+
+    def __init__(self):     
+
+        self.total_pot = 0
+
+    def flop(self):
+
+        card1 = drawn_cards.pop(len(drawn_cards)-1)
+        card2 = drawn_cards.pop(len(drawn_cards)-1) 
+        card2 = drawn_cards.pop(len(drawn_cards)-1)
+        self.card1 = (card1[0]+"["+card1[1]+"]")
+        self.card2 = (card2[0]+"["+card2[1]+"]")     
+        self.card3 = (card2[0]+"["+card2[1]+"]")
+        self.flop = self.card1+ " - " + self.card2 + " - " + self.card3
+        print (self.flop)
+
+    def turn(self):
+
+        card = drawn_cards.pop(len(drawn_cards)-1)
+        self.card = (card[0]+"["+card[1]+"]")
+        self.turn = self.card
+        print (self.turn)
+
+    def river(self):
+
+        card = drawn_cards.pop(len(drawn_cards)-1)
+        self.card = (card[0]+"["+card[1]+"]")
+        self.river = self.card
+        print (self.river)
+
+
+
+# Add player stacks and distribute holecards:
+
+for i in range(player_count):
+    players.append(i)
+    players[i] = Players(100)
+    players[i].holecards()
+
+# Add dealer to table:
+
+dealer = Table()
+
+dealer.flop()
+dealer.turn()
+dealer.river()
